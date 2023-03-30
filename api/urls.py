@@ -4,6 +4,7 @@ from rest_framework import routers
 from .api import PersonaViewSet
 from .api import ObjetoViewSet
 from .api import AccionViewSet
+from .api import PersonaPorFecha
 
 
 router = routers.DefaultRouter()
@@ -14,4 +15,5 @@ router.register('api/accion', AccionViewSet, 'accion')
 
 urlpatterns = [
 	path('', include(router.urls)),
+	path('api/personaPorFecha', PersonaPorFecha.as_view()),
 ]

@@ -25,3 +25,12 @@ class AccionViewSet(viewsets.ModelViewSet):
 	queryset = Accion.objects.all()
 	permission_classes = [permissions.AllowAny]
 	serializer_class = AccionSerializer
+
+class PersonaPorFecha(APIView):
+	def get(self, request, format=None):
+		
+		fecha_registro = self.request.query_params.get('fecha', None)
+		queryset = Persona.objects.filter(fecha_registro__gt=fecha_registro)
+		serializer = PersonaSerializer(queryset, many=True)
+
+		return Response(serializer.data)
