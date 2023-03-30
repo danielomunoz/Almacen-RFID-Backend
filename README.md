@@ -10,7 +10,7 @@
 * ```sudo apt-get install libpq-dev python-dev```
 * Listo, con ésto ya tenemos la máquina provisionada para correr nuestro backend
 
-## Cómo reconstruir el entorno virtual donde correrá el backend de la aplicación:
+## Cómo reconstruir el entorno virtual y correr el backend de la aplicación:
 * Nos situamos en una carpeta deseada
 * Abrimos un terminal
 * Ejecutamos: ```git clone https://github.com/danielomunoz/Almacen-RFID-Backend.git```
@@ -20,6 +20,8 @@
 * Ejecutamos: ```source ./backendenv/bin/activate```
 * Ejecutamos: ```pip3 install -r requirements.txt```
 * Al terminar, ya tendremos nuestro entorno virtual con todas las dependencias instaladas. Listo para usar.
+* Ejecutamos: ```python3 manage.py makemigrations && python3 manage.py migrate```
+* Para correr el backend en modo desarrollo: ```python3 manage.py runserver```
 
 ### INFO (no hay que replicar estos comandos, sólo son informativos para realizar la memoria):
 * Para crear un nuevo proyecto de django: ```django-admin startproject core .```
