@@ -15,13 +15,8 @@
 * Abrimos un terminal
 * Ejecutamos: ```git clone https://github.com/danielomunoz/Almacen-RFID-Backend.git```
 * Ejecutamos: ```cd Almacen-RFID-Backend```
-* Ejecutamos: ```pip3 install virtualenv```
-* Ejecutamos: ```python3 -m virtualenv backendenv```
-* Ejecutamos: ```source ./backendenv/bin/activate```
-* Ejecutamos: ```pip3 install -r requirements.txt```
-* Al terminar, ya tendremos nuestro entorno virtual con todas las dependencias instaladas. Listo para usar.
-* Ejecutamos: ```python3 manage.py makemigrations && python3 manage.py migrate```
-* Para correr el backend en modo desarrollo: ```python3 manage.py runserver```
+* Ejecutamos: ```source start.sh```
+* Al terminar, ya tendremos nuestro entorno virtual con todas las dependencias instaladas y el backend corriendo.
 
 ### INFO (no hay que replicar estos comandos, sólo son informativos para realizar la memoria):
 * Para crear un nuevo proyecto de django: ```django-admin startproject core .```
