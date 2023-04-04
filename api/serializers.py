@@ -9,6 +9,11 @@ class PersonaSerializer(serializers.ModelSerializer):
 		model = Persona
 		fields = '__all__'
 
+	def validate_rol(self, value):
+		if value not in ['alumno', 'profesor']:
+			raise serializers.ValidationError('El rol sólo puede tener dos valores: [alumno, profesor]')
+		return value
+
 class ObjetoSerializer(serializers.ModelSerializer):
 	responsable = PersonaSerializer()
 	propietario = PersonaSerializer()
