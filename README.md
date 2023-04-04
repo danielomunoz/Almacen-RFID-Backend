@@ -1,4 +1,4 @@
-# Generalidades del proyecto Almacén RFID
+# Backend del proyecto Almacén RFID
 
 ## Para el desarrollo se ha utilizado la siguiente máquina virtual:
 * Un ubuntu 20.04 LTS con el usuario 'danilo' corriendo sobre virtual-box. Imagen aquí: https://releases.ubuntu.com/focal/ubuntu-20.04.6-desktop-amd64.iso
