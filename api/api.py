@@ -6,6 +6,8 @@ from .models import *
 
 from .serializers import *
 
+
+
 class Persona_APIView(APIView):
 	def get(self, request, format=None, *args, **kwargs):
 		persona = Persona.objects.all()

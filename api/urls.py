@@ -3,6 +3,7 @@ from django.urls import path, include
 from .api import *
 
 
+
 urlpatterns = [
 	path('api/persona', Persona_APIView.as_view()),
 	path('api/persona/<str:pk>', Persona_APIView_Detail.as_view()),
