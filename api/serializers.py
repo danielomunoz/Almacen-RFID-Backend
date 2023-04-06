@@ -77,3 +77,8 @@ class AccionSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Accion
 		fields = '__all__'
+
+	def validate_tipo(self, value):
+		if value not in ['ingreso', 'salida']:
+			raise serializers.ValidationError('El tipo sólo puede tener como valores: [ingreso, salida]')
+		return value
