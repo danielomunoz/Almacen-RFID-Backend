@@ -1,5 +1,7 @@
 #! /bin/sh
 
+deactivate
+rm -rf backendev
 pip3 install virtualenv
 python3 -m virtualenv backendev
 source ~/.bashrc

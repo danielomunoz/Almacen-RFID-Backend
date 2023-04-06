@@ -13,6 +13,6 @@ from .api import *
 urlpatterns = [
 	# path('', include(router.urls)),
 	path('api/persona', Persona_APIView.as_view()),
-	path('api/persona/<int:pk>/', Persona_APIView_Detail.as_view()),
+	path('api/persona/<str:pk>', Persona_APIView_Detail.as_view()),
 	path('api/personaPorFecha', PersonaPorFecha.as_view()),
 ]
