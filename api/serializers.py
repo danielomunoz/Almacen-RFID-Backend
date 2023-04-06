@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from .models import Persona
-from .models import Objeto
-from .models import Accion
+from .models import *
 
 class PersonaSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -14,6 +12,7 @@ class PersonaSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError('El rol sólo puede tener dos valores: [alumno, profesor]')
 		return value
 
+
 class ObjetoSerializer(serializers.ModelSerializer):
 	responsable = PersonaSerializer()
 	propietario = PersonaSerializer()
@@ -21,9 +20,17 @@ class ObjetoSerializer(serializers.ModelSerializer):
 		model = Objeto
 		fields = '__all__'
 
+
+class DetectorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Detector
+		fields = '__all__'
+
+
 class AccionSerializer(serializers.ModelSerializer):
 	persona = PersonaSerializer()
 	objeto = ObjetoSerializer()
+	detector = DetectorSerializer()
 	class Meta:
 		model = Accion
 		fields = '__all__'

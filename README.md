@@ -16,6 +16,7 @@
 * Ejecutamos: ```git clone https://github.com/danielomunoz/Almacen-RFID-Backend.git```
 * Ejecutamos: ```cd Almacen-RFID-Backend```
 * Ejecutamos: ```source start.sh```
+* PARA DESARROLLO - Si queremos tener algunos datos de prueba en BD, ejecutamos: CTRL+C, seguido de ```source bootstrap.sh```
 * Al terminar, ya tendremos nuestro entorno virtual con todas las dependencias instaladas y el backend corriendo.
 
 ### INFO (no hay que replicar estos comandos, sólo son informativos para realizar la memoria):
