@@ -21,11 +21,25 @@ class PersonaSerializer(serializers.ModelSerializer):
 
 
 class ObjetoSerializer(serializers.ModelSerializer):
+	responsable = PersonaSerializer(
+					many=False,
+					read_only=True
+				)		
+	propietario = PersonaSerializer(
+					many=False,
+					read_only=True
+				)
+	class Meta:
+		model = Objeto
+		fields = '__all__'
+
+
+class PostObjetoSerializer(serializers.ModelSerializer):
 	responsable = serializers.PrimaryKeyRelatedField(
 					queryset=Persona.objects.all(),
 					required=False,
 					allow_null=True
-				)
+				)		
 	propietario = serializers.PrimaryKeyRelatedField(
 					queryset=Persona.objects.all(),
 					required=False
@@ -62,6 +76,25 @@ class DetectorSerializer(serializers.ModelSerializer):
 
 
 class AccionSerializer(serializers.ModelSerializer):
+	persona = PersonaSerializer(
+				many=False,
+				read_only=True
+			)
+	objeto = ObjetoSerializer(
+				many=False,
+				read_only=True
+			)
+	detector = DetectorSerializer(
+				many=False,
+				read_only=True
+			)
+
+	class Meta:
+		model = Accion
+		fields = '__all__'
+
+
+class PostAccionSerializer(serializers.ModelSerializer):
 	persona = serializers.PrimaryKeyRelatedField(
 				queryset=Persona.objects.all(),
 				required=True
@@ -74,6 +107,7 @@ class AccionSerializer(serializers.ModelSerializer):
 				queryset=Detector.objects.all(),
 				required=True
 			)
+
 	class Meta:
 		model = Accion
 		fields = '__all__'

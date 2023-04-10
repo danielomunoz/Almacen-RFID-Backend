@@ -61,7 +61,7 @@ class Objeto_APIView(APIView):
 		return Response({"ok": True, "payload": serializer.data})
 
 	def post(self, request, format=None):
-		serializer = ObjetoSerializer(data=request.data)
+		serializer = PostObjetoSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
 		serializer.save()
@@ -85,7 +85,7 @@ class Objeto_APIView_Detail(APIView):
 		objeto = self.get_object(pk)
 		if objeto == None:
 			return Response({"ok": False, "errors": "No se encontró un objeto con ese ID en base de datos"})
-		serializer = ObjetoSerializer(objeto, data=request.data)
+		serializer = PostObjetoSerializer(objeto, data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
 		serializer.save()
@@ -106,7 +106,7 @@ class Accion_APIView(APIView):
 		return Response({"ok": True, "payload": serializer.data})
 
 	def post(self, request, format=None):
-		serializer = AccionSerializer(data=request.data)
+		serializer = PostAccionSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
 		serializer.save()
@@ -130,7 +130,7 @@ class Accion_APIView_Detail(APIView):
 		accion = self.get_object(pk)
 		if accion == None:
 			return Response({"ok": False, "errors": "No se encontró una accion con ese ID en base de datos"})
-		serializer = AccionSerializer(accion, data=request.data)
+		serializer = PostAccionSerializer(accion, data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
 		serializer.save()
