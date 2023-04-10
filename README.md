@@ -10,6 +10,17 @@
 * ```sudo apt-get install libpq-dev python-dev```
 * Listo, con ésto ya tenemos la máquina provisionada para correr nuestro backend
 
+## Podemos correr el backend en un ubuntu 20 que corre sobre vagrant (v2.3.0) (y virtualbox 6.1.40):
+* Ejecutamos: ```cd vagrant```
+* Ejecutamos: ```vagrant up```
+* Ejecutamos: ```vagrant ssh```
+* Ejecutamos: ```git clone https://github.com/danielomunoz/Almacen-RFID-Backend.git```
+* Ejecutamos: ```cd Almacen-RFID-Backend```
+* Ejecutamos: ```source start.sh```
+* Al terminar, ya tendremos nuestro entorno virtual con todas las dependencias instaladas y el backend corriendo.
+* Para apagar la máquina virtual: ```vagrant halt```
+* Para eliminar la máquina virtual: ```vagrant destroy```
+
 ## Cómo reconstruir el entorno virtual y correr el backend de la aplicación:
 * Nos situamos en una carpeta deseada
 * Abrimos un terminal
