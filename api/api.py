@@ -189,12 +189,31 @@ class Detector_APIView_Detail(APIView):
 		return Response({"ok": True, "payload": "Detector borrado satisfactoriamente, id: {}".format(pk)})
 
 
-
 class PersonaPorFecha(APIView):
 	def get(self, request, format=None):
-		
 		fecha_registro = self.request.query_params.get('fecha', None)
 		queryset = Persona.objects.filter(fecha_registro__gt=fecha_registro)
 		serializer = PersonaSerializer(queryset, many=True)
 
 		return Response(serializer.data)
+
+
+class MisObjetos(APIView):
+	def get(self, request, fk, code, format=None):
+		try:
+			# Código para obtener los objetos de los que soy propietario o responsable
+			if code == 0:
+				queryset = Objeto.objects.filter(propietario=fk) | Objeto.objects.filter(responsable=fk)
+			# Código para obtener los objetos de los que soy propietario
+			elif code == 1:
+				queryset = Objeto.objects.filter(propietario=fk)
+			# Código para obtener los objetos de los que soy responsable
+			elif code == 2:
+				queryset = Objeto.objects.filter(responsable=fk)
+			else:
+				return Response({"ok": False, "errors": "No introdujo un código válido ([0, 1, 2])"})
+			serializer = ObjetoSerializer(queryset, many=True)
+
+			return Response({"ok": True, "payload": serializer.data})
+		except:
+			return Response({"ok": False, "errors": "No introdujo un ID válido para nuestra base de datos"})
