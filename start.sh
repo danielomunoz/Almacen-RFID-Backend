@@ -14,4 +14,4 @@ echo '<link rel="shortcut icon" type="image/png" href="/static/favicon.ico" />' 
 echo '{% endblock %}' >> ./backendev/lib/python3.8/site-packages/rest_framework/templates/rest_framework/api.html
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py runserver 10.0.2.15:8000
+python3 manage.py runserver 0.0.0.0:8000

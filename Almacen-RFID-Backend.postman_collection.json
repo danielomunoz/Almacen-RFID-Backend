@@ -130,7 +130,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/persona/18d2dd60-6475-4cbe-849d-fccdc87acc7c",
+							"raw": "127.0.0.1:8000/api/persona/a18e32e6-db09-4324-8189-3781d27a1b8c",
 							"host": [
 								"127",
 								"0",
@@ -141,7 +141,7 @@
 							"path": [
 								"api",
 								"persona",
-								"18d2dd60-6475-4cbe-849d-fccdc87acc7c"
+								"a18e32e6-db09-4324-8189-3781d27a1b8c"
 							]
 						}
 					},
@@ -162,7 +162,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/persona/18d2dd60-6475-4cbe-849d-fccdc87acc7c",
+							"raw": "127.0.0.1:8000/api/persona/a18e32e6-db09-4324-8189-3781d27a1b8c",
 							"host": [
 								"127",
 								"0",
@@ -173,7 +173,7 @@
 							"path": [
 								"api",
 								"persona",
-								"18d2dd60-6475-4cbe-849d-fccdc87acc7c"
+								"a18e32e6-db09-4324-8189-3781d27a1b8c"
 							]
 						}
 					},
