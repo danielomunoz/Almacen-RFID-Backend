@@ -1,3 +1,5 @@
+import math
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,6 +8,7 @@ from .models import *
 
 from .serializers import *
 
+from .paginations import *
 
 
 class Persona_APIView(APIView):
@@ -54,7 +57,7 @@ class Persona_APIView_Detail(APIView):
 
 
 
-class Objeto_APIView(APIView):
+class Objeto_APIView(APIView, CustomPaginationObjetos):
 	def get(self, request, format=None, *args, **kwargs):
 		nombre = self.request.query_params.get('nombre', None)
 		descripcion = self.request.query_params.get('descripcion', None)
@@ -102,8 +105,11 @@ class Objeto_APIView(APIView):
 		if estado_objeto is not None:
 			queryset = queryset & Objeto.objects.filter(estado_objeto=estado_objeto)
 
-		serializer = ObjetoSerializer(queryset, many=True)
-		return Response({"ok": True, "payload": serializer.data})
+		queryset = queryset.order_by('-fecha_alta')
+		queryset = self.paginate_queryset(queryset, request, view=self)
+		serializer = ObjetoSerializer(queryset, many=True, context={'request':request})
+
+		return self.get_paginated_response({"ok": True, "payload": serializer.data, "tamano_pagina": self.get_page_size(request), "total_paginas": (math.ceil(self.page.paginator.count / self.get_page_size(request))), "total_objetos": self.page.paginator.count}, request)
 
 	def post(self, request, format=None):
 		serializer = PostObjetoSerializer(data=request.data)
@@ -144,7 +150,7 @@ class Objeto_APIView_Detail(APIView):
 		return Response({"ok": True, "payload": "Objeto borrado satisfactoriamente, id: {}".format(pk)})
 
 
-class Accion_APIView(APIView):
+class Accion_APIView(APIView, CustomPaginationAcciones):
 	def get(self, request, format=None, *args, **kwargs):
 		tipo = self.request.query_params.get('tipo', None)
 		nombre_objeto = self.request.query_params.get('nombre_objeto', None)
@@ -165,8 +171,11 @@ class Accion_APIView(APIView):
 		if fecha_hasta is not None:
 			queryset = queryset & Accion.objects.filter(fecha__lte=fecha_hasta)
 
-		serializer = AccionSerializer(queryset, many=True)
-		return Response({"ok": True, "payload": serializer.data})
+		queryset = queryset.order_by('-fecha')
+		queryset = self.paginate_queryset(queryset, request, view=self)
+		serializer = AccionSerializer(queryset, many=True, context={'request':request})
+
+		return self.get_paginated_response({"ok": True, "payload": serializer.data, "tamano_pagina": self.get_page_size(request), "total_paginas": (math.ceil(self.page.paginator.count / self.get_page_size(request))), "total_objetos": self.page.paginator.count}, request)
 
 	def post(self, request, format=None):
 		serializer = PostAccionSerializer(data=request.data)
@@ -264,7 +273,7 @@ class PersonaPorFecha(APIView):
 		return Response(serializer.data)
 
 
-class MisObjetos(APIView):
+class MisObjetos(APIView, CustomPaginationObjetos):
 	def get(self, request, fk, format=None):
 		soy_propietario = self.request.query_params.get('soy_propietario', None)
 		soy_responsable = self.request.query_params.get('soy_responsable', None)
@@ -283,45 +292,44 @@ class MisObjetos(APIView):
 		codigo_rfid = self.request.query_params.get('codigo_rfid', None)
 		estado_objeto = self.request.query_params.get('estado_objeto', None)
 
-		try:
-			if soy_propietario is not None and soy_responsable is None:
-				queryset = Objeto.objects.filter(propietario=fk)
-			elif soy_propietario is None and soy_responsable is not None:
-				queryset = Objeto.objects.filter(responsable=fk)
-			else:
-				queryset = Objeto.objects.filter(propietario=fk) | Objeto.objects.filter(responsable=fk)
+		if soy_propietario is not None and soy_responsable is None:
+			queryset = Objeto.objects.filter(propietario=fk)
+		elif soy_propietario is None and soy_responsable is not None:
+			queryset = Objeto.objects.filter(responsable=fk)
+		else:
+			queryset = Objeto.objects.filter(propietario=fk) | Objeto.objects.filter(responsable=fk)
 
-			if nombre is not None:
-				queryset = queryset & Objeto.objects.filter(nombre__icontains=nombre)
-			if descripcion is not None:
-				queryset = queryset & Objeto.objects.filter(descripcion__icontains=descripcion)
-			if familia is not None:
-				queryset = queryset & Objeto.objects.filter(familia__icontains=familia)
-			if categoria is not None:
-				queryset = queryset & Objeto.objects.filter(categoria__icontains=categoria)
-			if subcategoria is not None:
-				queryset = queryset & Objeto.objects.filter(subcategoria__icontains=subcategoria)
-			if numero_serie is not None:
-				queryset = queryset & Objeto.objects.filter(numero_serie__icontains=numero_serie)
-			if estado_en_almacen is not None:
-				queryset = queryset & Objeto.objects.filter(estado_en_almacen=estado_en_almacen)
-			if fecha_registrado_desde is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_alta__gte=fecha_registrado_desde)
-			if fecha_registrado_hasta is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_alta__lte=fecha_registrado_hasta)
-			if localizacion is not None:
-				queryset = queryset & Objeto.objects.filter(localizacion__icontains=localizacion)
-			if fecha_ultima_accion_desde is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__gte=fecha_ultima_accion_desde)
-			if fecha_ultima_accion_hasta is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__lte=fecha_ultima_accion_hasta)
-			if codigo_rfid is not None:
-				queryset = queryset & Objeto.objects.filter(codigo_rfid__icontains=codigo_rfid)
-			if estado_objeto is not None:
-				queryset = queryset & Objeto.objects.filter(estado_objeto=estado_objeto)
+		if nombre is not None:
+			queryset = queryset & Objeto.objects.filter(nombre__icontains=nombre)
+		if descripcion is not None:
+			queryset = queryset & Objeto.objects.filter(descripcion__icontains=descripcion)
+		if familia is not None:
+			queryset = queryset & Objeto.objects.filter(familia__icontains=familia)
+		if categoria is not None:
+			queryset = queryset & Objeto.objects.filter(categoria__icontains=categoria)
+		if subcategoria is not None:
+			queryset = queryset & Objeto.objects.filter(subcategoria__icontains=subcategoria)
+		if numero_serie is not None:
+			queryset = queryset & Objeto.objects.filter(numero_serie__icontains=numero_serie)
+		if estado_en_almacen is not None:
+			queryset = queryset & Objeto.objects.filter(estado_en_almacen=estado_en_almacen)
+		if fecha_registrado_desde is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_alta__gte=fecha_registrado_desde)
+		if fecha_registrado_hasta is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_alta__lte=fecha_registrado_hasta)
+		if localizacion is not None:
+			queryset = queryset & Objeto.objects.filter(localizacion__icontains=localizacion)
+		if fecha_ultima_accion_desde is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__gte=fecha_ultima_accion_desde)
+		if fecha_ultima_accion_hasta is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__lte=fecha_ultima_accion_hasta)
+		if codigo_rfid is not None:
+			queryset = queryset & Objeto.objects.filter(codigo_rfid__icontains=codigo_rfid)
+		if estado_objeto is not None:
+			queryset = queryset & Objeto.objects.filter(estado_objeto=estado_objeto)
 
-			serializer = ObjetoSerializer(queryset, many=True)
+		queryset = queryset.order_by('-fecha_alta')
+		queryset = self.paginate_queryset(queryset, request, view=self)
+		serializer = ObjetoSerializer(queryset, many=True, context={'request':request})
 
-			return Response({"ok": True, "payload": serializer.data})
-		except:
-			return Response({"ok": False, "errors": "No introdujo un ID válido para nuestra base de datos"})
+		return self.get_paginated_response({"ok": True, "payload": serializer.data, "tamano_pagina": self.get_page_size(request), "total_paginas": (math.ceil(self.page.paginator.count / self.get_page_size(request))), "total_objetos": self.page.paginator.count}, request)
