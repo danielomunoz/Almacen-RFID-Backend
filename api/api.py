@@ -63,15 +63,13 @@ class Objeto_APIView(APIView):
 		subcategoria = self.request.query_params.get('subcategoria', None)
 		numero_serie = self.request.query_params.get('numero_serie', None)
 		estado_en_almacen = self.request.query_params.get('estado_en_almacen', None)
-		fecha_alta = self.request.query_params.get('fecha_alta', None)
-		responsable = self.request.query_params.get('responsable', None)
-		propietario = self.request.query_params.get('propietario', None)
+		fecha_registrado_desde = self.request.query_params.get('fecha_registrado_desde', None)
+		fecha_registrado_hasta = self.request.query_params.get('fecha_registrado_hasta', None)
 		localizacion = self.request.query_params.get('localizacion', None)
-		fecha_ultima_accion = self.request.query_params.get('fecha_ultima_accion', None)
+		fecha_ultima_accion_desde = self.request.query_params.get('fecha_ultima_accion_desde', None)
+		fecha_ultima_accion_hasta = self.request.query_params.get('fecha_ultima_accion_hasta', None)
 		codigo_rfid = self.request.query_params.get('codigo_rfid', None)
-		imagen = self.request.query_params.get('imagen', None)
 		estado_objeto = self.request.query_params.get('estado_objeto', None)
-		fecha_baja = self.request.query_params.get('fecha_baja', None)
 
 		queryset = Objeto.objects.all()
 
@@ -89,24 +87,20 @@ class Objeto_APIView(APIView):
 			queryset = queryset & Objeto.objects.filter(numero_serie__icontains=numero_serie)
 		if estado_en_almacen is not None:
 			queryset = queryset & Objeto.objects.filter(estado_en_almacen=estado_en_almacen)
-		if fecha_alta is not None:
-			queryset = queryset & Objeto.objects.filter(fecha_alta=fecha_alta)
-		if responsable is not None:
-			queryset = queryset & Objeto.objects.filter(responsable=responsable)
-		if propietario is not None:
-			queryset = queryset & Objeto.objects.filter(propietario=propietario)
+		if fecha_registrado_desde is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_alta__gte=fecha_registrado_desde)
+		if fecha_registrado_hasta is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_alta__lte=fecha_registrado_hasta)
 		if localizacion is not None:
 			queryset = queryset & Objeto.objects.filter(localizacion__icontains=localizacion)
-		if fecha_ultima_accion is not None:
-			queryset = queryset & Objeto.objects.filter(fecha_ultima_accion=fecha_ultima_accion)
+		if fecha_ultima_accion_desde is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__gte=fecha_ultima_accion_desde)
+		if fecha_ultima_accion_hasta is not None:
+			queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__lte=fecha_ultima_accion_hasta)
 		if codigo_rfid is not None:
 			queryset = queryset & Objeto.objects.filter(codigo_rfid__icontains=codigo_rfid)
-		if imagen is not None:
-			queryset = queryset & Objeto.objects.filter(imagen=imagen)
 		if estado_objeto is not None:
 			queryset = queryset & Objeto.objects.filter(estado_objeto=estado_objeto)
-		if fecha_baja is not None:
-			queryset = queryset & Objeto.objects.filter(fecha_baja=fecha_baja)
 
 		serializer = ObjetoSerializer(queryset, many=True)
 		return Response({"ok": True, "payload": serializer.data})
@@ -152,8 +146,26 @@ class Objeto_APIView_Detail(APIView):
 
 class Accion_APIView(APIView):
 	def get(self, request, format=None, *args, **kwargs):
-		accion = Accion.objects.all()
-		serializer = AccionSerializer(accion, many=True)
+		tipo = self.request.query_params.get('tipo', None)
+		nombre_objeto = self.request.query_params.get('nombre_objeto', None)
+		nombre_persona = self.request.query_params.get('nombre_persona', None)
+		fecha_desde = self.request.query_params.get('fecha_desde', None)
+		fecha_hasta = self.request.query_params.get('fecha_hasta', None)
+
+		queryset = Accion.objects.all()
+
+		if tipo is not None:
+			queryset = queryset & Accion.objects.filter(tipo__icontains=tipo)
+		if nombre_objeto is not None:
+			queryset = queryset & Accion.objects.filter(objeto__nombre__icontains=nombre_objeto)
+		if nombre_persona is not None:
+			queryset = queryset & Accion.objects.filter(persona__nombre__icontains=nombre_persona)
+		if fecha_desde is not None:
+			queryset = queryset & Accion.objects.filter(fecha__gte=fecha_desde)
+		if fecha_hasta is not None:
+			queryset = queryset & Accion.objects.filter(fecha__lte=fecha_hasta)
+
+		serializer = AccionSerializer(queryset, many=True)
 		return Response({"ok": True, "payload": serializer.data})
 
 	def post(self, request, format=None):
@@ -263,15 +275,13 @@ class MisObjetos(APIView):
 		subcategoria = self.request.query_params.get('subcategoria', None)
 		numero_serie = self.request.query_params.get('numero_serie', None)
 		estado_en_almacen = self.request.query_params.get('estado_en_almacen', None)
-		fecha_alta = self.request.query_params.get('fecha_alta', None)
-		responsable = self.request.query_params.get('responsable', None)
-		propietario = self.request.query_params.get('propietario', None)
+		fecha_registrado_desde = self.request.query_params.get('fecha_registrado_desde', None)
+		fecha_registrado_hasta = self.request.query_params.get('fecha_registrado_hasta', None)
 		localizacion = self.request.query_params.get('localizacion', None)
-		fecha_ultima_accion = self.request.query_params.get('fecha_ultima_accion', None)
+		fecha_ultima_accion_desde = self.request.query_params.get('fecha_ultima_accion_desde', None)
+		fecha_ultima_accion_hasta = self.request.query_params.get('fecha_ultima_accion_hasta', None)
 		codigo_rfid = self.request.query_params.get('codigo_rfid', None)
-		imagen = self.request.query_params.get('imagen', None)
 		estado_objeto = self.request.query_params.get('estado_objeto', None)
-		fecha_baja = self.request.query_params.get('fecha_baja', None)
 
 		try:
 			if soy_propietario is not None and soy_responsable is None:
@@ -295,24 +305,20 @@ class MisObjetos(APIView):
 				queryset = queryset & Objeto.objects.filter(numero_serie__icontains=numero_serie)
 			if estado_en_almacen is not None:
 				queryset = queryset & Objeto.objects.filter(estado_en_almacen=estado_en_almacen)
-			if fecha_alta is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_alta=fecha_alta)
-			if responsable is not None:
-				queryset = queryset & Objeto.objects.filter(responsable=responsable)
-			if propietario is not None:
-				queryset = queryset & Objeto.objects.filter(propietario=propietario)
+			if fecha_registrado_desde is not None:
+				queryset = queryset & Objeto.objects.filter(fecha_alta__gte=fecha_registrado_desde)
+			if fecha_registrado_hasta is not None:
+				queryset = queryset & Objeto.objects.filter(fecha_alta__lte=fecha_registrado_hasta)
 			if localizacion is not None:
 				queryset = queryset & Objeto.objects.filter(localizacion__icontains=localizacion)
-			if fecha_ultima_accion is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_ultima_accion=fecha_ultima_accion)
+			if fecha_ultima_accion_desde is not None:
+				queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__gte=fecha_ultima_accion_desde)
+			if fecha_ultima_accion_hasta is not None:
+				queryset = queryset & Objeto.objects.filter(fecha_ultima_accion__lte=fecha_ultima_accion_hasta)
 			if codigo_rfid is not None:
 				queryset = queryset & Objeto.objects.filter(codigo_rfid__icontains=codigo_rfid)
-			if imagen is not None:
-				queryset = queryset & Objeto.objects.filter(imagen=imagen)
 			if estado_objeto is not None:
 				queryset = queryset & Objeto.objects.filter(estado_objeto=estado_objeto)
-			if fecha_baja is not None:
-				queryset = queryset & Objeto.objects.filter(fecha_baja=fecha_baja)
 
 			serializer = ObjetoSerializer(queryset, many=True)
 
