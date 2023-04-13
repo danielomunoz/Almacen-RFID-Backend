@@ -39,11 +39,8 @@ class PostObjetoSerializer(serializers.ModelSerializer):
 					queryset=Persona.objects.all(),
 					required=False,
 					allow_null=True
-				)		
-	propietario = serializers.PrimaryKeyRelatedField(
-					queryset=Persona.objects.all(),
-					required=False
 				)
+	# Quitamos el serializer del propietario como primary key porque al crear un objeto será mejor meter el código rfid del propietario
 	class Meta:
 		model = Objeto
 		fields = '__all__'

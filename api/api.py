@@ -112,6 +112,12 @@ class Objeto_APIView(APIView, CustomPaginationObjetos):
 		return self.get_paginated_response({"ok": True, "payload": serializer.data, "tamano_pagina": self.get_page_size(request), "total_paginas": (math.ceil(self.page.paginator.count / self.get_page_size(request))), "total_objetos": self.page.paginator.count}, request)
 
 	def post(self, request, format=None):
+		try:
+			propietario = Persona.objects.get(codigo_rfid=request.data["propietario"])
+			propietario_serializer = PersonaSerializer(propietario)
+			request.data["propietario"] = propietario_serializer.data["id"]
+		except Persona.DoesNotExist:
+			return Response({"ok": False, "errors": "No se encontró una persona con ese Código RFID en base de datos. No se encontró al propietario."})
 		serializer = PostObjetoSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
