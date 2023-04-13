@@ -7,7 +7,7 @@ from .models import *
 class PersonaSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Persona
-		fields = '__all__'
+		fields = ['id', 'nombre', 'email', 'movil', 'dni', 'codigo_rfid', 'imagen', 'fecha_registro', 'rol', 'estado', 'token_sesion']
 
 	def validate_rol(self, value):
 		if value not in ['alumno', 'profesor']:
