@@ -2,8 +2,13 @@ from django.db import models
 from django.utils import timezone
 
 import uuid
+import datetime
 
 # Create your models here.
+def upload_to(instance, filename):
+	now = datetime.datetime.now()
+	now = str(now).replace(" ", "-").replace(":", ".").replace(".", "-")
+	return 'images/{now}_{filename}'.format(now=now, filename=filename)
 
 
 class Persona(models.Model):
@@ -13,7 +18,7 @@ class Persona(models.Model):
 	movil = models.CharField(max_length=15, blank=True, null=False)
 	dni = models.CharField(max_length=15, unique=True, blank=True, null=False)
 	codigo_rfid = models.CharField(max_length=40, unique=True, blank=True, null=False)
-	imagen = models.CharField(max_length=100, blank=True, null=False)
+	imagen = models.ImageField(upload_to=upload_to, blank=True, null=True)
 	fecha_registro = models.DateTimeField(default=timezone.now, blank=True, null=False)
 	rol = models.CharField(max_length=20, blank=True, null=False)
 	usuario = models.CharField(max_length=50, unique=True, blank=True, null=False)
@@ -41,7 +46,7 @@ class Objeto(models.Model):
 	localizacion = models.CharField(max_length=100, blank=True, null=False)
 	fecha_ultima_accion = models.DateTimeField(blank=True, null=True)
 	codigo_rfid = models.CharField(max_length=40, unique=True, blank=True, null=False)
-	imagen = models.CharField(max_length=100, blank=True, null=False)
+	imagen = models.ImageField(upload_to=upload_to, blank=True, null=True)
 	estado_objeto = models.CharField(max_length=20, blank=True, null=False, default='nuevo')
 	fecha_baja = models.DateTimeField(blank=True, null=True)
 

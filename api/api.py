@@ -3,6 +3,7 @@ import math
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import *
 
@@ -12,6 +13,7 @@ from .paginations import *
 
 
 class Persona_APIView(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, format=None, *args, **kwargs):
 		persona = Persona.objects.all()
 		serializer = PersonaSerializer(persona, many=True)
@@ -25,6 +27,7 @@ class Persona_APIView(APIView):
 		return Response({"ok": True, "payload": serializer.data})
 
 class Persona_APIView_Detail(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get_object(self, pk):
 		try:
 			return Persona.objects.get(id=pk)
@@ -42,6 +45,7 @@ class Persona_APIView_Detail(APIView):
 		persona = self.get_object(pk)
 		if persona == None:
 			return Response({"ok": False, "errors": "No se encontró una persona con ese ID en base de datos"})
+		persona.imagen.delete()
 		serializer = PersonaSerializer(persona, data=request.data)
 		if not serializer.is_valid():
 			return Response({"ok": False, "errors": serializer.errors})
@@ -58,6 +62,7 @@ class Persona_APIView_Detail(APIView):
 
 
 class Objeto_APIView(APIView, CustomPaginationObjetos):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, format=None, *args, **kwargs):
 		nombre = self.request.query_params.get('nombre', None)
 		descripcion = self.request.query_params.get('descripcion', None)
@@ -113,6 +118,7 @@ class Objeto_APIView(APIView, CustomPaginationObjetos):
 
 	def post(self, request, format=None):
 		try:
+			request.data._mutable = True
 			propietario = Persona.objects.get(codigo_rfid=request.data["propietario"])
 			propietario_serializer = PersonaSerializer(propietario)
 			request.data["propietario"] = propietario_serializer.data["id"]
@@ -125,6 +131,7 @@ class Objeto_APIView(APIView, CustomPaginationObjetos):
 		return Response({"ok": True, "payload": serializer.data})
 
 class Objeto_APIView_Detail(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get_object(self, pk):
 		try:
 			return Objeto.objects.get(id=pk)
@@ -157,6 +164,7 @@ class Objeto_APIView_Detail(APIView):
 
 
 class Accion_APIView(APIView, CustomPaginationAcciones):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, format=None, *args, **kwargs):
 		tipo = self.request.query_params.get('tipo', None)
 		nombre_objeto = self.request.query_params.get('nombre_objeto', None)
@@ -191,6 +199,7 @@ class Accion_APIView(APIView, CustomPaginationAcciones):
 		return Response({"ok": True, "payload": serializer.data})
 
 class Accion_APIView_Detail(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get_object(self, pk):
 		try:
 			return Accion.objects.get(id=pk)
@@ -223,6 +232,7 @@ class Accion_APIView_Detail(APIView):
 
 
 class Detector_APIView(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, format=None, *args, **kwargs):
 		detector = Detector.objects.all()
 		serializer = DetectorSerializer(detector, many=True)
@@ -236,6 +246,7 @@ class Detector_APIView(APIView):
 		return Response({"ok": True, "payload": serializer.data})
 
 class Detector_APIView_Detail(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get_object(self, pk):
 		try:
 			return Detector.objects.get(id=pk)
@@ -268,6 +279,7 @@ class Detector_APIView_Detail(APIView):
 
 
 class PersonaPorFecha(APIView):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, format=None):
 		fecha_registro = self.request.query_params.get('fecha', None)
 		print(fecha_registro)
@@ -280,6 +292,7 @@ class PersonaPorFecha(APIView):
 
 
 class MisObjetos(APIView, CustomPaginationObjetos):
+	parser_classes = (MultiPartParser, FormParser)
 	def get(self, request, fk, format=None):
 		soy_propietario = self.request.query_params.get('soy_propietario', None)
 		soy_responsable = self.request.query_params.get('soy_responsable', None)

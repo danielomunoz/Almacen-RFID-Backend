@@ -5,6 +5,7 @@ from .models import *
 
 
 class PersonaSerializer(serializers.ModelSerializer):
+	imagen = serializers.ImageField(required=False)
 	class Meta:
 		model = Persona
 		fields = ['id', 'nombre', 'email', 'movil', 'dni', 'codigo_rfid', 'imagen', 'fecha_registro', 'rol', 'estado', 'token_sesion']
@@ -21,6 +22,7 @@ class PersonaSerializer(serializers.ModelSerializer):
 
 
 class ObjetoSerializer(serializers.ModelSerializer):
+	imagen = serializers.ImageField(required=False)
 	responsable = PersonaSerializer(
 					many=False,
 					read_only=True
@@ -35,6 +37,7 @@ class ObjetoSerializer(serializers.ModelSerializer):
 
 
 class PostObjetoSerializer(serializers.ModelSerializer):
+	imagen = serializers.ImageField(required=False)
 	responsable = serializers.PrimaryKeyRelatedField(
 					queryset=Persona.objects.all(),
 					required=False,
